@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "6eaa009c-ab1f-42c9-8ad2-ac130e37d401",
+  "path": "rust-best-practices",
+  "path_key": "rust-best-practices",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "skillssh",
+    "ref": "apollographql/skills/rust-best-practices",
+    "subpath": "skills\\rust-best-practices",
+    "branch": null
+  }
+}
