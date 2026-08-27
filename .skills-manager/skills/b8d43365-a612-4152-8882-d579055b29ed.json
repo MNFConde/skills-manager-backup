@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "b8d43365-a612-4152-8882-d579055b29ed",
+  "path": "rust-testing",
+  "path_key": "rust-testing",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "skillssh",
+    "ref": "affaan-m/ecc/rust-testing",
+    "subpath": "skills\\rust-testing",
+    "branch": null
+  }
+}
