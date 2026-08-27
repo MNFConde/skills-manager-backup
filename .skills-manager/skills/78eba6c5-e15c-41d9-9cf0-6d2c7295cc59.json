@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "78eba6c5-e15c-41d9-9cf0-6d2c7295cc59",
+  "path": "rust-async-patterns",
+  "path_key": "rust-async-patterns",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "skillssh",
+    "ref": "wshobson/agents/rust-async-patterns",
+    "subpath": "plugins\\systems-programming\\skills\\rust-async-patterns",
+    "branch": null
+  }
+}
