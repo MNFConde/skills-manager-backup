@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "820e5471-7915-4e49-86ff-6b9e667b25e9",
+  "path": "upskill",
+  "path_key": "upskill",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "git",
+    "ref": "https://github.com/MadsLorentzen/ai-job-search",
+    "subpath": ".claude\\skills\\upskill",
+    "branch": null
+  }
+}

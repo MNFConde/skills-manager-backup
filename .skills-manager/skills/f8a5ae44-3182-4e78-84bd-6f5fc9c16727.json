@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "f8a5ae44-3182-4e78-84bd-6f5fc9c16727",
+  "path": "freehire-search",
+  "path_key": "freehire-search",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "git",
+    "ref": "https://github.com/MadsLorentzen/ai-job-search",
+    "subpath": ".agents\\skills\\freehire-search",
+    "branch": null
+  }
+}
