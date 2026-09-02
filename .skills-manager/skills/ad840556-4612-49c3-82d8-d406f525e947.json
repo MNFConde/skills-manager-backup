@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "ad840556-4612-49c3-82d8-d406f525e947",
+  "path": "dioxus-modern",
+  "path_key": "dioxus-modern",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "skillssh",
+    "ref": "diegosouzapw/awesome-omni-skill/dioxus-modern",
+    "subpath": "skills\\frontend\\dioxus-modern",
+    "branch": null
+  }
+}
