@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "6885e77b-51d1-4b51-b1f1-0b83e0edb626",
+  "path": "web-design-guidelines",
+  "path_key": "web-design-guidelines",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "skillssh",
+    "ref": "asyrafhussin/agent-skills/web-design-guidelines",
+    "subpath": "skills\\web-design-guidelines",
+    "branch": null
+  }
+}

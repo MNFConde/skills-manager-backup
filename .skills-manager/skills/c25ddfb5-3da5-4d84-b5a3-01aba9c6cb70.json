@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "c25ddfb5-3da5-4d84-b5a3-01aba9c6cb70",
+  "path": "a11y-debugging",
+  "path_key": "a11y-debugging",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "skillssh",
+    "ref": "chromedevtools/chrome-devtools-mcp/a11y-debugging",
+    "subpath": "skills\\a11y-debugging",
+    "branch": null
+  }
+}
