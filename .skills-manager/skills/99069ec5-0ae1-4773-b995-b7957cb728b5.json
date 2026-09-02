@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "99069ec5-0ae1-4773-b995-b7957cb728b5",
+  "path": "dioxus-knowledge-patch",
+  "path_key": "dioxus-knowledge-patch",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "skillssh",
+    "ref": "nevaberry/nevaberry-plugins/dioxus-knowledge-patch",
+    "subpath": "plugins\\knowledge-patch\\patches-claude\\dioxus-knowledge-patch",
+    "branch": null
+  }
+}
