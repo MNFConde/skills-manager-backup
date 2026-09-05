@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "scenario_id": "cb86d772-0c3c-4e28-8dd6-91bbc1d7e264",
+  "name": "Rust",
+  "description": null,
+  "icon": "terminal",
+  "sort_order": 999
+}
