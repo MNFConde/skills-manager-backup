@@ -3,5 +3,12 @@
   "scenario_id": "cb86d772-0c3c-4e28-8dd6-91bbc1d7e264",
   "skill_id": "78eba6c5-e15c-41d9-9cf0-6d2c7295cc59",
   "sort_order": 0,
-  "tools": {}
+  "tools": {
+    "codex": true,
+    "crush": false,
+    "github_copilot": true,
+    "opencode": true,
+    "pi": true,
+    "zcode": true
+  }
 }
