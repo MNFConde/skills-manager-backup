@@ -6,7 +6,10 @@
   "tools": {
     "codex": true,
     "crush": true,
+    "deepseek_harness": true,
     "github_copilot": true,
+    "kode": true,
+    "omp_agent": true,
     "opencode": true,
     "pi": true,
     "zcode": false
