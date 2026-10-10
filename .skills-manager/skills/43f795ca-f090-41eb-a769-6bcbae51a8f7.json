@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "43f795ca-f090-41eb-a769-6bcbae51a8f7",
+  "path": "project-cairn",
+  "path_key": "project-cairn",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "git",
+    "ref": "https://github.com/iBlinkQ/project-cairn",
+    "subpath": null,
+    "branch": null
+  }
+}
