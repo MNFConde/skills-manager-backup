@@ -72,6 +72,10 @@ This is a suggested default, not a silent decision: the user still confirms or o
 
 When the resolved `language` is not English, write `AGENTS.md` / `cairn/LOG.md` / `cairn/ROADMAP.md` / topic notes in that language: translate prose and section headings, but keep `{{PLACEHOLDER}}` tokens, frontmatter keys, and file names exactly as the English templates in `assets/templates/` define them, and preserve the same heading sequence. For Chinese, match established terms — including heading labels — using `references/zh-glossary.md` so wording stays consistent across independently-initialized projects.
 
+### Note types
+
+New project topics use `project_topic`; new graduation notes use `project_insight`, independent of documentation language or provider. Do not ask a type question or add/read `cairn.note_type` or `defaults.note_type`. If either field survives from the 2026-10-14 release, ignore it and preserve the configuration file; optional cleanup and historical-note migration require separate confirmation (see `upgrade.md`). Other defaults and init decisions are unchanged.
+
 ### What lands in the project
 
 The project-level `.cairn/config.yaml` stores the **fully resolved (frozen) config**, not just the diff against user-level defaults — so a collaborator who clones the repo gets a complete, portable config without needing the author's `~/.config/cairn`. (A sparse "diff-only" form is a possible later optimization; the current format freezes the full result.)
@@ -152,7 +156,7 @@ A provider that depends on an external tool (Lark/Feishu CLI, Notion API, a sync
 
 ## Files to create or update
 
-- `AGENTS.md` — from `assets/templates/AGENTS.md`, substituting the five placeholders.
+- `AGENTS.md` — from `assets/templates/AGENTS.md`, substituting its placeholders.
 - `CLAUDE.md` — from `assets/templates/CLAUDE.md` (one line `@AGENTS.md`). An existing `CLAUDE.md` gets the line appended instead (see "Host entry files").
 - `CODEBUDDY.md` / `.codebuddy/CODEBUDDY.md` — only when one already exists: append the import line. Never create one (see "Host entry files").
 - `.cairn/config.yaml` — from `assets/templates/config.yaml`, with the collected values frozen in. `{{SKILL_SPEC_DATE}}` is stamped automatically from `references/upgrade.md`'s "Current spec date" — it is not a user decision and is never asked; it anchors later instance-drift checks (see `upgrade.md`).

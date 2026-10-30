@@ -2,7 +2,7 @@
 
 Bring an already-initialized project instance up to the current skill spec, or measure how far it has drifted. `cairn init` freezes the spec of its day into the project (AGENTS.md wording, config shape, LOG conventions); the skill keeps evolving, and nothing updates the frozen copy automatically. This reference is both the detection checklist and the execution manual for closing that gap.
 
-**Current spec date: 2026-10-05**
+**Current spec date: 2026-10-22**
 
 ## Two layers of "upgrade" — keep them apart
 
@@ -15,7 +15,7 @@ This is a **pull model**: upstream changes never notify anyone. Drift is tolerat
 
 1. Read `skill_spec_date` from the project's `.cairn/config.yaml`.
    - **Missing field** → treat as predating every entry: run the full changelog below.
-2. Walk the changelog entries **newer than that date**, oldest first. For each: run **Detect**; if drifted, apply **Fix** according to its safety level — `auto` fixes may be applied directly (show the diff), `confirm` fixes are proposed and wait for the user.
+2. Walk the changelog entries **newer than that date**, oldest first. Skip any superseded Fix and apply its named replacement instead; do not execute obsolete selection/configuration actions on the way to a newer release. For each: run **Detect**; if drifted, apply **Fix** according to its safety level — `auto` fixes may be applied directly (show the diff), `confirm` fixes are proposed and wait for the user.
 3. When all entries are handled, stamp `skill_spec_date` in `.cairn/config.yaml` with the current spec date above (add the field if absent).
 4. Record the upgrade as one `cairn/LOG.md` entry — what was checked, what was fixed, what was declined — same as an audit run logs itself.
 
@@ -110,3 +110,20 @@ Entry format — four fixed fields:
 - **Detect**: the project has a root `CODEBUDDY.md` (or only `.codebuddy/CODEBUDDY.md`) with no line importing `AGENTS.md` = drifted: CodeBuddy-family hosts (CodeBuddy Code, CodeBuddy IDE, WorkBuddy) load `CODEBUDDY.md` instead of `AGENTS.md` whenever it exists, so no Cairn rule reaches them. Same check for a `CLAUDE.md` without an `@AGENTS.md` line (e.g. a retrofit that kept the project's own `CLAUDE.md`).
 - **Fix**: append the import line per `init.md` → "Host entry files", including its handling of a tracked file under `ignore` / `private_sync`; then hand the user that section's fresh-session check.
 - **Safety**: `confirm` (edits a file the project owns, and may change what its next commit contains).
+
+
+### 2026-10-14 — configurable project-experience note identity (superseded)
+
+Historical release: new topics and graduation notes once shared a selected type. **Superseded by 2026-10-22**: do not run the old type-selection or configuration-writing Fix, including when upgrading directly from a pre-10-14 instance.
+
+- **Affects**: project `cairn.note_type`, optional personal `defaults.note_type`, and notes produced under that release.
+- **Detect**: locate those fields and project-owned notes only as described in the replacement entry below.
+- **Fix**: use the 2026-10-22 entry; no type question or new configuration field.
+- **Safety**: `confirm` (historical configuration cleanup and note migration remain separate choices).
+
+### 2026-10-22 — fixed topic and graduation identities (2026-10-19 requirement)
+
+- **Affects**: old type configuration, project topics and knowledge-base notes, including configurable Chinese/custom values and historical `knowledge_note`.
+- **Detect**: inspect project `cairn.note_type` and personal `defaults.note_type` only to report optional cleanup; they are now ignored and not invalid. Locate historical-note candidates within the project's configured knowledge directory and actual provider targets, following `graduated_to` and `graduated_from` pointers. Missing pointers require verified provenance; never scan and relabel an entire knowledge base or create a parallel directory from a stale target.
+- **Fix**: new topics use `project_topic`, new graduation notes use `project_insight`, independent of language or old defaults. A source topic remains a project topic after graduation and can keep evolving. Preserve old configuration by default; separately list and confirm any field cleanup. Separately list each note's location, layer, old type and proposed type (project topic → `project_topic`; graduated experience → `project_insight`). On confirmation, back up, change only type, preserve body/other fields and independently reread. Declining either operation is valid and must not block normal maintenance or a confirmed re-graduation: preserve the target's prior type. Audit reports opportunities, not errors. Do not run the superseded 10-14 Fix even for much older instances.
+- **Safety**: `confirm` (configuration cleanup and historical-note migration are separate, optional approvals; installing this skill grants neither).

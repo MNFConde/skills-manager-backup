@@ -1,6 +1,6 @@
 # frontmatter
 
-Defines project-side and knowledge-base-side frontmatter.
+Defines project-side and knowledge-base-side frontmatter. New project topics use `project_topic`; new graduation notes use `project_insight`. The project-side source remains a topic after graduation and may continue to evolve. Initialization does not select or configure note types. Existing types are preserved unless a separate migration is confirmed (see `upgrade.md`).
 
 ## Project topic note — recommended fields
 
@@ -70,8 +70,9 @@ graduated_by:
 
 ## Enum values
 
-- `type` (OKF-aligned concept-object kind):
-  - currently produced: `project_topic` (project side), `knowledge_note` (knowledge-base side).
+- `type` (note identity):
+  - newly created: `project_topic` (project topic), `project_insight` (graduated, validated reusable project experience).
+  - historical: `knowledge_note`, Chinese, and custom values remain valid. Preserve existing types during routine edits and re-graduation unless a type change is separately confirmed. A project topic can already have graduated; use provenance fields, not type alone, to judge graduation history or readiness.
   - forward-looking, not auto-created by init/maintenance: `reference`, `playbook`, `decision_record`, `log_index`.
 - `status`: `active`, `superseded`, `archived`, `needs_review`.
 - `contains` (controlled, multi-value): any of `decision`, `experience`, `lesson`, `procedure`, `reference`, `open_question`.
@@ -79,8 +80,8 @@ graduated_by:
 
 ## Field semantics
 
-- `type` answers "what kind of knowledge object is this?" — a single concept-object kind.
-- `contains` answers "what kinds of knowledge ingredients are inside?" — multi-value content composition. A single topic note can hold both experience and lessons, so never use `type: experience/lesson`; represent mixed content with `contains`.
+- `type` answers "what identity does this note have?" — a project topic or graduated experience. It is independent of document language and authoring mode. Legacy configuration fields do not control new output. Preserve arbitrary historical string values with correct YAML quoting when rewriting confirmed updates.
+- `contains` answers "what kinds of knowledge ingredients are inside?" — multi-value content composition. A single topic note can hold both experience and lessons, so do not encode mixed ingredients as separate type values; represent mixed content with `contains`.
 - `tags` answers "which topics, domains, projects, or technologies should this be found under?" — open, multi-value retrieval labels; they do not drive rule decisions.
 - `graduation_status` records an explicit graduation-readiness judgment when one has been made. Do not pre-stamp `not_reviewed`; absence means no graduation judgment has been recorded. Use `candidate` when the topic appears reusable and ready for confirmation, `deferred` when it may become reusable after more validation or abstraction, and `not_applicable` when the topic has been reviewed and should not graduate as a note. Keep the reason in the body when it matters.
 - `authoring_mode`: `ai_generated` | `human_written` | `ai_assisted`. Records how the note was written, to separate AI-generated, human-written, and human-AI notes in the knowledge base. It does not encode trust, review status, or ownership. It is orthogonal to both human-provenance fields, `contributors` and `graduated_by`. Project Cairn auto-generated topic notes default to `ai_generated`.

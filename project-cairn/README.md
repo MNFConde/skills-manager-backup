@@ -110,7 +110,7 @@ Project Cairn does not stamp out a directory full of empty templates. Beyond the
 
 Schemas, configurations, and contracts consumed directly by code stay in the code tree. Cairn keeps the knowledge around them: why they look this way, what alternatives were tested, and what went wrong during implementation.
 
-Topic notes use Markdown and YAML frontmatter with at least a `type` field, following the minimal convention of Google's [Open Knowledge Format](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing). Project Cairn does not claim to implement the complete OKF bundle.
+Topic notes use Markdown and YAML frontmatter with at least a `type` field, following the minimal convention of Google's [Open Knowledge Format](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing). Project Cairn does not claim to implement the complete OKF bundle. New project topics use `project_topic`; newly graduated notes use `project_insight`. Initialization does not ask for a type. Existing note types remain valid and are preserved unless a separate migration is confirmed. See [frontmatter](references/frontmatter.md).
 
 Graduated notes carry provenance through `graduated_from`, `contributors`, `graduated_by`, and `authoring_mode`, so readers can trace a conclusion back to the people, project, and source material that produced it.
 

@@ -4,6 +4,8 @@ Manual or agent-requested checks on the project knowledge layer. Audit is the sa
 
 ## Checks
 
+Historical `knowledge_note`, Chinese, and custom note types remain valid. Old `cairn.note_type` / `defaults.note_type` fields are ignored, not invalid configuration. Report optional cleanup or migration per `upgrade.md`; do not block maintenance or graduation, rewrite old notes, or ask a new type-selection question.
+
 - LOG entries that are too long or contain conclusions that belong in topic notes.
 - Topic notes without useful frontmatter.
 - Missing topic notes for repeated decisions or solved problems.

@@ -110,7 +110,7 @@ Project Cairn 不预建一堆空模板。除了初始化所需的核心文件，
 
 被代码或工作流直接消费的 schema、配置和工程契约仍留在代码树里。Cairn 保存的是关于它们的知识，比如为什么这样设计、比较过哪些方案、实施时踩过什么坑。
 
-主题文档使用 Markdown 与 YAML frontmatter，至少包含一个 `type` 字段，对齐 Google [Open Knowledge Format](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing) 的最小约定。这不等于完整实现 OKF bundle。
+主题文档使用 Markdown 与 YAML frontmatter，至少包含一个 `type` 字段，对齐 Google [Open Knowledge Format](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing) 的最小约定。这不等于完整实现 OKF bundle。新建项目主题固定使用 `project_topic`，新建毕业笔记固定使用 `project_insight`，初始化不询问 type。历史笔记保留原类型，迁移须单独确认。详见 [frontmatter](references/frontmatter.md)。
 
 每篇毕业笔记还会记录来源和参与者，包括 `graduated_from`、`contributors`、`graduated_by` 与 `authoring_mode`，方便回到形成结论的项目和材料。
 

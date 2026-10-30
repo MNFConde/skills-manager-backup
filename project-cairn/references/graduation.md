@@ -31,11 +31,11 @@ If the user still declines to connect a provider, stop — graduation cannot pro
 2. The user confirms before anything is written or prepared.
 3. If a project topic has been explicitly judged, optionally record `graduation_status` on the project topic note: `candidate`, `deferred`, or `not_applicable`. Do not add this field to every topic by default.
 4. After human confirmation and before the provider write:
-   1. Resolve the confirmer identity per `frontmatter.md` and pass it as `graduated_by` on both the project and knowledge-base sides.
+   1. Resolve the confirmer per `frontmatter.md`; write `graduated_by` on both sides.
    2. Merge and de-duplicate `contributors` from all source topics when graduating from multiple sources.
    3. Re-check any Origin quote against the target audience. Carry a safe quote into the knowledge-base note's **Background**; if risk is found, sanitize both copies consistently or omit it from both.
    4. Treat quote absence as valid and never create a placeholder section.
-5. Prepare the knowledge-base note with required frontmatter (`graduated_from` and non-empty `graduated_by` mandatory; see `frontmatter.md`), and record `graduated_by` on the project topic note. Optionally record `graduated_to` / `graduated_at` there as well. When choosing `tags`, check the provider's existing tag inventory first (Obsidian: `obsidian tags counts`) and prefer reusing an existing tag over coining a near-synonym — consumption-time tag-query recall depends on this discipline (see `provider-interface.md` → Read side).
+5. Prepare the knowledge-base note per `frontmatter.md`, including `type: project_insight` for new knowledge-base notes, `graduated_from`, and non-empty `graduated_by`; record the confirmer on the source. `graduated_to` / `graduated_at` are optional. Check the provider's tag inventory (Obsidian: `obsidian tags counts`) and reuse tags before coining near-synonyms; retrieval recall depends on this discipline (see `provider-interface.md` → Read side).
 6. Record the graduation itself as one `cairn/LOG.md` entry — summary plus a pointer to the knowledge-base note — the same way an audit run logs itself (see `audit.md` → Behavior).
 
 ## Note body structure
@@ -62,9 +62,11 @@ Preserve direct wording and apply the redaction/scene-summary rules in `maintena
 
 ## Re-graduation (updating an already-graduated topic)
 
-A project topic note is not frozen once it has graduated — it stays the project's local current truth and can keep being updated in place as the project progresses. "One-directional" means the knowledge-base note is never silently overwritten by a project-side edit, not that the project-side source can no longer change.
+Read the target's type and preserve it, including `knowledge_note`, Chinese or custom values. A type migration needs its own location/old/new confirmation; declining it still permits the confirmed content update. Skill or configuration updates do not authorize migration (see `frontmatter.md` and `upgrade.md`).
 
-When a topic that already has `graduated_to` gains a substantive new development (a real update, not a typo fix), propose re-graduating: run the same graduation flow again in the adapter's explicit update mode, targeting the same knowledge-base note (same provider adapter and stored identifier), update `graduated_at` to the new date, and union the current confirmer into `graduated_by` on both sides without duplicating an existing identity. Resolve that union before invoking the low-level adapter; the adapter writes the supplied current truth and does not infer prior identities. Keep the event/time/target and confirmer association in `cairn/LOG.md`; frontmatter remains a de-duplicated identity list rather than an event history. This is a normal repeat of the one-directional `graduate` action, not a new synchronization mechanism — the user still confirms before anything is written, same as a first-time graduation. Until a re-graduation happens, the knowledge-base note remains the cross-project current truth but may be behind the project's latest local state; `cairn audit` flags this (see `audit.md`).
+A graduated project topic remains the project's local current truth and can evolve in place. “One-directional” means project edits never silently overwrite the knowledge-base note; it does not freeze the source.
+
+When a topic with `graduated_to` gains substantive new knowledge, propose re-graduation through the same human-confirmed flow and the adapter's update mode. Target the stored provider identifier, update `graduated_at`, and union the current confirmer into `graduated_by` on both sides without duplicates. Resolve that union before calling the adapter: it writes the supplied current truth, not an inferred identity merge. LOG records event, time, target and confirmer; frontmatter is an identity list, not event history. Until re-graduation, the knowledge-base note remains cross-project current truth but may lag the latest local state; audit flags this. Replacement requires confirmation just as the first graduation does.
 
 ## Provider adapter constraints
 
@@ -102,4 +104,4 @@ When the target provider supports wiki-style links, add links only when they are
 - Put the link inside that local context, with surrounding text that makes the reason for the connection clear.
 - Do not link merely because two notes share a tag, came from the same project, or were graduated in the same batch.
 
-After graduation the knowledge-base note is the cross-project current truth for that topic and is not rewritten back from the project. The project topic note remains the current truth within this project's local context (and a historical record of how the knowledge was reached); the two layers do not compete.
+After graduation the knowledge-base note is the cross-project current truth and is not rewritten back from the project. The project topic note remains the current truth within this project's local context (and a historical record of how the knowledge was reached); the two layers do not compete.
