@@ -1,0 +1,129 @@
+# upgrade
+
+Bring an already-initialized project instance up to the current skill spec, or measure how far it has drifted. `cairn init` freezes the spec of its day into the project (AGENTS.md wording, config shape, LOG conventions); the skill keeps evolving, and nothing updates the frozen copy automatically. This reference is both the detection checklist and the execution manual for closing that gap.
+
+**Current spec date: 2026-10-22**
+
+## Two layers of "upgrade" — keep them apart
+
+1. **The skill copy** (the installed files under the agent's skills directory). Out of scope here: the skill is documentation-only, has no self-update, and the user refreshes it however they installed it (re-run the install command / git pull).
+2. **The project instance** (the project's `AGENTS.md`, `.cairn/config.yaml`, `cairn/LOG.md` conventions, and knowledge-base notes it graduated). This is what this reference upgrades.
+
+This is a **pull model**: upstream changes never notify anyone. Drift is tolerated until an audit or an explicit upgrade request surfaces it. An instance older than its skill copy is the dangerous state (agents act on new references against old instance files); an instance matching an old skill copy is internally consistent and harmless until the copy is refreshed.
+
+## Running an upgrade
+
+1. Read `skill_spec_date` from the project's `.cairn/config.yaml`.
+   - **Missing field** → treat as predating every entry: run the full changelog below.
+2. Walk the changelog entries **newer than that date**, oldest first. Skip any superseded Fix and apply its named replacement instead; do not execute obsolete selection/configuration actions on the way to a newer release. For each: run **Detect**; if drifted, apply **Fix** according to its safety level — `auto` fixes may be applied directly (show the diff), `confirm` fixes are proposed and wait for the user.
+3. When all entries are handled, stamp `skill_spec_date` in `.cairn/config.yaml` with the current spec date above (add the field if absent).
+4. Record the upgrade as one `cairn/LOG.md` entry — what was checked, what was fixed, what was declined — same as an audit run logs itself.
+
+`cairn audit` runs steps 1–2 as a drift check and reports findings without fixing (see `audit.md`); a user-requested upgrade runs all four steps.
+
+## Maintaining this changelog (skill-author discipline)
+
+Every spec change must answer one question before it lands: **does it affect already-initialized instances or already-graduated notes?** If yes, add an entry here in the same commit and bump the current spec date to the change's date. Skill-internal edits (wording, routing, new provider adapters) that leave existing instances valid do not get entries. A missed entry means that drift is never detected anywhere — this discipline is the single point of failure of the whole mechanism.
+
+Entry format — four fixed fields:
+
+- **Affects**: which instance surface (`AGENTS.md` / `config` / `LOG` / `knowledge-base notes` / `user environment`).
+- **Detect**: one concrete, executable check.
+- **Fix**: the repair action.
+- **Safety**: `auto` (mechanical, apply with diff shown) or `confirm` (changes meaning, target, or anything outside the project — ask first).
+
+## Changelog (oldest first)
+
+### 2026-07-01 — LOG entries are reverse-chronological, newest at top
+
+- **Affects**: `cairn/LOG.md` (+ its intro line).
+- **Detect**: compare entry dates top-to-bottom; ascending order (oldest first) or new entries appended at the bottom = drifted. Also check the intro line states newest-at-top.
+- **Fix**: re-sort entries newest-first and fix the intro line. Use in-entry dates as ordering evidence; where several entries share a date, preserve their relative order only if intra-day sequence is evidenced (e.g. one entry references another), otherwise keep file order within the day.
+- **Safety**: `auto` when dates are unambiguous; `confirm` when ordering evidence is thin.
+
+### 2026-07-03 — provider `target`/`index` are container-relative paths (no vault/root prefix)
+
+- **Affects**: `config` (`graduation.target` / `graduation.index`, single-provider keys or `providers:` list entries).
+- **Detect**: for filesystem-backed providers (Obsidian), a `target`/`index` that is an absolute path or begins with the vault's own name (double-nesting, e.g. `MyVault/30_kb/...` for vault `MyVault`) = drifted.
+- **Fix**: rewrite to vault-relative (e.g. `30_kb/INDEX.md`). Latent until the first graduation runs, then writes land in the wrong place — fix before any graduation.
+- **Safety**: `confirm` (changes where future graduations write).
+
+### 2026-07-03 — consumption reflex uses the semantic test, not trigger words
+
+- **Affects**: `AGENTS.md` ("Knowledge base consumption reflex" bullet).
+- **Detect**: the bullet lacks the graduation-symmetry semantic test — "before work whose reusable kernel (any conclusion it **produces or depends on**) would be **graduation-worthy**, check the index first" — e.g. it still lists trigger keywords or unconditionally says "always check".
+- **Fix**: replace the bullet with the current template wording (`assets/templates/AGENTS.md`), translated per the project's `language`, keeping the project's own `{{KNOWLEDGE_INDEX}}` substitution.
+- **Safety**: `auto` (mechanical swap to template text; show the diff).
+
+### 2026-07-03 — user-level cascading defaults exist (`~/.config/cairn/config.yaml`)
+
+- **Affects**: `user environment` (nothing inside the project instance itself).
+- **Detect**: `~/.config/cairn/config.yaml` absent while the user has at least one initialized project.
+- **Fix**: offer to create it from this project's resolved config (shape: `assets/templates/user-config.yaml`) so future inits reuse defaults one-key. Declining is fine; this entry is an offer, not a repair.
+- **Safety**: `confirm` (writes outside the project).
+
+### 2026-07-03 — `graduated_from` paths are project-relative
+
+- **Affects**: `knowledge-base notes` (already-graduated notes in the configured provider).
+- **Detect**: any `graduated_from` entry whose `path` is absolute (leading `/` or a machine-specific prefix) = drifted.
+- **Fix**: rewrite the `path` values to project-relative. Fold into the next re-graduation of that note when one is pending; otherwise fix directly.
+- **Safety**: `confirm` (edits knowledge-base content).
+
+### 2026-07-15 — `skill_spec_date` field introduced in `.cairn/config.yaml`
+
+- **Affects**: `config`.
+- **Detect**: the field is missing.
+- **Fix**: run the full changelog above (missing field = predates everything), then stamp the field with the current spec date. This entry is the cold-start path for every instance initialized before the field existed.
+- **Safety**: `auto` (the stamp itself; individual fixes above keep their own levels).
+
+### 2026-07-16 — human provenance and optional origin quotes
+
+- **Affects**: `project topic notes`, `knowledge-base notes`, stored graduation identifiers, and Notion provider database schemas.
+- **Detect**: a topic created or substantively updated on/after 2026-07-16 has safely identifiable human contributors but no `contributors`; a graduation on/after 2026-07-16 lacks non-empty `graduated_by` on either side; or Notion preflight reports missing/wrongly typed `contributors` / `graduated_by` Multi-select properties. Legacy untouched notes without the fields are not drifted. Also flag an origin-quote section that is empty, unattributed, or knowingly retained on only one side after graduation because of an unresolved disclosure risk. For a previously re-graduated topic, search its provider container for duplicate same-title objects or repeated body content; if duplicates exist or the project did not retain the original provider identifier needed by update mode, the prior create-only flow drifted.
+- **Fix**: add and de-duplicate the two identity lists when the identities can be confirmed; add or correct the two Notion Multi-select properties before the next graduation; backfill legacy notes only when touched or re-graduated. Remove, explicitly redact, or replace risky direct wording with a labeled scene summary on both project and knowledge-base copies after human confirmation. Preserve one canonical provider object and its identifier for future explicit update mode; propose archiving/removing accidental duplicates only after human review. Existing canonical notes are updated in place: Obsidian same path + `--force`, Lark stored node/document identifiers, Notion stored page ID.
+- **Safety**: `auto` for adding confirmed identities inside the project and de-duplicating list values; `confirm` for changing provider schemas, external knowledge-base notes, attribution, quotation, or redaction.
+
+### 2026-08-05 — completion replies require a Cairn checkpoint
+
+- **Affects**: `AGENTS.md` completion behavior.
+- **Detect**: the project `AGENTS.md` lacks a rule requiring a Cairn checkpoint before any completion claim—including but not limited to work being complete or implemented, finalized, updated, synchronized, verified or tests passing; a problem being fixed or resolved; a deliverable being ready to use; a statement that work has ended; and semantically equivalent wording—or lacks the read-only exception and conditional LOG/topic/ROADMAP behavior.
+- **Fix**: add the current `assets/templates/AGENTS.md` Completion reply gate, translated per project language; keep the instance's resolved project/provider values unchanged.
+- **Safety**: `confirm` (changes when the agent may finish a reply and can cause project knowledge files to be written).
+
+### 2026-08-07 — `git_policy` is per-project and enforced via `.gitignore`
+
+- **Affects**: `user environment` (`~/.config/cairn/config.yaml`), `config`, and the project's `.gitignore`.
+- **Detect**: two independent checks. ① `~/.config/cairn/config.yaml` has `git_policy` (or `reference_git_policy`) under `defaults` = drifted: the field used to be a cascading default, so any project initialized after it was saved may have inherited an answer that was never asked. ② The project's `.cairn/config.yaml` says `git_policy: ignore` or `private_sync` but the project's `.gitignore` has no rule covering `knowledge_dir` = drifted: the stated policy has no effect and `git add .` will commit the knowledge dir anyway. (Same check for `reference_git_policy` against `<knowledge_dir>/Reference/`.)
+- **Fix**: ① delete the `git_policy` / `reference_git_policy` keys from the user-level `defaults` block; leave the rest of the file untouched. ② Ask the user once what this specific repository actually wants — do not assume the recorded value was ever a real answer — then either add the missing `.gitignore` rule or correct `git_policy` in `.cairn/config.yaml` to match reality. An instance that inherited its value silently has no other point at which it gets corrected.
+- **Safety**: `confirm` (touches a file outside the project and changes what future commits contain).
+
+### 2026-09-04 — `git_policy: ignore` covers the whole Cairn footprint, under a neutral comment
+
+- **Affects**: the project's `.gitignore` (and, through it, what the repo's remote already carries).
+- **Detect**: in a project whose `.cairn/config.yaml` says `git_policy: ignore` or `private_sync`, run `git ls-files -- .cairn AGENTS.md CLAUDE.md '<knowledge_dir>'`. Any path listed = drifted: the policy says Cairn stays out of this repo, yet these are committed — and if the remote is public, already published. Separately drifted: the ignore block's comment names `cairn init`, the policy, or Cairn at all.
+- **Fix**: extend the ignore block to cover `<knowledge_dir>/`, `.cairn/`, and `AGENTS.md` / `CLAUDE.md` where Cairn authored them, and replace the block's comment with the neutral `# Local working files, not part of the project`. An ignore rule does nothing for a path git already tracks: list those paths for the user with `git rm --cached <path>` as the remedy and let them decide — untracking is theirs to approve, and where the repo was already pushed, say plainly that removing a file from HEAD does not remove it from history or from anything that already mirrored it.
+- **Safety**: `confirm` (changes what future commits contain, and may mean accepting or rewriting published history).
+
+### 2026-10-05 — hosts that load another entry file import `AGENTS.md`
+
+- **Affects**: `AGENTS.md` reach — the host entry files beside it (`CLAUDE.md`, `CODEBUDDY.md`).
+- **Detect**: the project has a root `CODEBUDDY.md` (or only `.codebuddy/CODEBUDDY.md`) with no line importing `AGENTS.md` = drifted: CodeBuddy-family hosts (CodeBuddy Code, CodeBuddy IDE, WorkBuddy) load `CODEBUDDY.md` instead of `AGENTS.md` whenever it exists, so no Cairn rule reaches them. Same check for a `CLAUDE.md` without an `@AGENTS.md` line (e.g. a retrofit that kept the project's own `CLAUDE.md`).
+- **Fix**: append the import line per `init.md` → "Host entry files", including its handling of a tracked file under `ignore` / `private_sync`; then hand the user that section's fresh-session check.
+- **Safety**: `confirm` (edits a file the project owns, and may change what its next commit contains).
+
+
+### 2026-10-14 — configurable project-experience note identity (superseded)
+
+Historical release: new topics and graduation notes once shared a selected type. **Superseded by 2026-10-22**: do not run the old type-selection or configuration-writing Fix, including when upgrading directly from a pre-10-14 instance.
+
+- **Affects**: project `cairn.note_type`, optional personal `defaults.note_type`, and notes produced under that release.
+- **Detect**: locate those fields and project-owned notes only as described in the replacement entry below.
+- **Fix**: use the 2026-10-22 entry; no type question or new configuration field.
+- **Safety**: `confirm` (historical configuration cleanup and note migration remain separate choices).
+
+### 2026-10-22 — fixed topic and graduation identities (2026-10-19 requirement)
+
+- **Affects**: old type configuration, project topics and knowledge-base notes, including configurable Chinese/custom values and historical `knowledge_note`.
+- **Detect**: inspect project `cairn.note_type` and personal `defaults.note_type` only to report optional cleanup; they are now ignored and not invalid. Locate historical-note candidates within the project's configured knowledge directory and actual provider targets, following `graduated_to` and `graduated_from` pointers. Missing pointers require verified provenance; never scan and relabel an entire knowledge base or create a parallel directory from a stale target.
+- **Fix**: new topics use `project_topic`, new graduation notes use `project_insight`, independent of language or old defaults. A source topic remains a project topic after graduation and can keep evolving. Preserve old configuration by default; separately list and confirm any field cleanup. Separately list each note's location, layer, old type and proposed type (project topic → `project_topic`; graduated experience → `project_insight`). On confirmation, back up, change only type, preserve body/other fields and independently reread. Declining either operation is valid and must not block normal maintenance or a confirmed re-graduation: preserve the target's prior type. Audit reports opportunities, not errors. Do not run the superseded 10-14 Fix even for much older instances.
+- **Safety**: `confirm` (configuration cleanup and historical-note migration are separate, optional approvals; installing this skill grants neither).
