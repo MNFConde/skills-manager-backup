@@ -3,5 +3,8 @@
   "scenario_id": "d0a409ce-ea38-4753-84df-47c8740d145e",
   "skill_id": "444c6f00-48b0-40b3-a793-4592daceef67",
   "sort_order": 1,
-  "tools": {}
+  "tools": {
+    "openbitfun": true,
+    "zcode": true
+  }
 }
